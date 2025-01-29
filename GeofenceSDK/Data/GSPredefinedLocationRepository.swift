@@ -18,4 +18,8 @@ class GSPredefinedLocationRepository: GSLocationRepositoryProtocol {
             GSLocationEntity(name: "İTÜ Tuzla Kampüsü", coordinate: CLLocationCoordinate2D(latitude: 40.81481225447748, longitude: 29.292240660340585))
         ]
     }
+    
+    func getRadius() -> Double {
+        return 100.0
+    }
 }

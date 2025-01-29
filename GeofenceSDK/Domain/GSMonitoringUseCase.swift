@@ -8,6 +8,6 @@
 import Foundation
 
 /// Protocol defining the geofence monitoring use case.
-protocol GSGeofenceMonitoringUseCase {
+protocol GSMonitoringUseCase {
     func startMonitoring()
 }
