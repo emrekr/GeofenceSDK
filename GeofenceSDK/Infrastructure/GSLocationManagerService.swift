@@ -22,9 +22,11 @@ final class GSLocationManagerService: NSObject {
     // Request the necessary authorizations
     func requestAuthorizations() {
         if CLLocationManager.authorizationStatus() == .notDetermined {
-            locationManager.requestAlwaysAuthorization()
+            locationManager.requestWhenInUseAuthorization()
         } else if CLLocationManager.authorizationStatus() == .denied {
             // Optionally handle the scenario if user denied location
+        } else if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
+            locationManager.requestAlwaysAuthorization()
         }
     }
     
@@ -43,25 +45,51 @@ final class GSLocationManagerService: NSObject {
             
             locationManager.startMonitoring(for: region)
         }
+        locationManager.allowsBackgroundLocationUpdates = true
+        locationManager.showsBackgroundLocationIndicator = true
+    }
+    
+    func stopMonitoring() {
+        for region in locationManager.monitoredRegions {
+            locationManager.stopMonitoring(for: region)
+            DebugLogger.debugPrint("Monitoring stoped for region: \(region)", from: self)
+        }
     }
 }
 
 extension GSLocationManagerService: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        // Re-request or handle if needed
+        switch status {
+        case .notDetermined:
+            locationManager.requestWhenInUseAuthorization()
+        case .restricted, .denied, .authorizedAlways, .authorized:
+            break
+        case .authorizedWhenInUse:
+            locationManager.requestAlwaysAuthorization()
+        @unknown default:
+            break
+        }
     }
     
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
         guard let circularRegion = region as? CLCircularRegion else { return }
         geofenceEventHandler.handleGeofenceEvent(locationName: circularRegion.identifier, eventType: .enter)
+        DebugLogger.debugPrint("didEnterRegion: \(region)", from: self)
+        GeoSDK.shared.delegate?.geofenceSdk( GeoSDK.shared, didEnterGeofenceWithIdentifier: circularRegion.identifier)
     }
     
     func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
         guard let circularRegion = region as? CLCircularRegion else { return }
         geofenceEventHandler.handleGeofenceEvent(locationName: circularRegion.identifier, eventType: .exit)
+        DebugLogger.debugPrint("didExitRegion: \(region)", from: self)
+        GeoSDK.shared.delegate?.geofenceSdk(GeoSDK.shared, didExitGeofenceWithIdentifier: circularRegion.identifier)
     }
     
     func locationManager(_ manager: CLLocationManager, monitoringDidFailFor region: CLRegion?, withError error: Error) {
-        print("Monitoring failed for region: \(String(describing: region?.identifier)) error: \(error)")
+        DebugLogger.debugPrint("Monitoring failed for region: \(String(describing: region?.identifier)) error: \(error)", from: self)
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion) {
+        DebugLogger.debugPrint("didStartMonitoringFor region: \(region)", from: self)
     }
 }

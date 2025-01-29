@@ -26,4 +26,8 @@ final class GSMonitoringInteractor: GSMonitoringUseCase {
         // Setup geofences
         locationManagerService.configureGeofences(locations: locations, radius: radius)
     }
+    
+    func stopMonitoring() {
+        locationManagerService.stopMonitoring()
+    }
 }

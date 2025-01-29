@@ -265,6 +265,10 @@
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GeofenceExampleApp/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Konum iznine ihtiyacimiz var";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Konum iznine ihtiyacimiz var";
+				INFOPLIST_KEY_NSLocationUsageDescription = "Konum iznine ihtiyacimiz var";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Konum iznine ihtiyacimiz var";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -298,6 +302,10 @@
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GeofenceExampleApp/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Konum iznine ihtiyacimiz var";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Konum iznine ihtiyacimiz var";
+				INFOPLIST_KEY_NSLocationUsageDescription = "Konum iznine ihtiyacimiz var";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Konum iznine ihtiyacimiz var";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

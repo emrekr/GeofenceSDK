@@ -37,7 +37,7 @@ final class GSNotificationService: GSEventHandlerProtocol {
         content.sound = UNNotificationSound.default
         content.userInfo = [
             "locationName": locationName,
-            "eventType": eventTypeString
+            "eventType": eventType.rawValue
         ]
         
         let request = UNNotificationRequest(

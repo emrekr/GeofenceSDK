@@ -5,6 +5,7 @@
 //  Created by Emre Kuru on 29.01.2025.
 //
 
-enum GSEventType {
-    case enter, exit
+enum GSEventType: String {
+    case enter = "Enter"
+    case exit = "Exit"
 }
