@@ -21,7 +21,7 @@ final class GSMonitoringInteractor: GSMonitoringUseCase {
         
         // Fetch locations from repository
         let locations = locationRepo.fetchLocations()
-        let radius = locationRepo.getRadius()
+        let radius = locationRepo.getDefaultRadius()
         
         // Setup geofences
         locationManagerService.configureGeofences(locations: locations, radius: radius)
