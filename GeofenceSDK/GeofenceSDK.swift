@@ -7,26 +7,26 @@
 
 import UserNotifications
 
-public protocol GeoGeofenceSDKDelegate {
+/// Protocol for GeoGeofence SDK events
+public protocol GeoGeofenceSDKDelegate: AnyObject {
+    /// Called when the device enters a geofence region
     func geofenceSdk(_ sdk: GeoSDK, didEnterGeofenceWithIdentifier identifier: String)
+    /// Called when the device exits a geofence region
     func geofenceSdk(_ sdk: GeoSDK, didExitGeofenceWithIdentifier identifier: String)
 }
 
+/// Singleton SDK to handle geofence monitoring
 public final class GeoSDK: NSObject {
+    
+    /// Shared instance
     public static let shared = GeoSDK()
-    public var delegate: GeoGeofenceSDKDelegate?
     
-    public func startGeofenceMonitoring() {
-        interactor.startMonitoring()
-    }
+    /// Delegate to receive geofence events
+    public weak var delegate: GeoGeofenceSDKDelegate?
     
-    func stopGeofenceMonitoring() {
-        interactor.stopMonitoring()
-    }
-    
-    // Private
     private let interactor: GSMonitoringUseCase
     
+    /// Private initializer to enforce singleton pattern
     private override init() {
         let notificationService = GSNotificationService()
         let locationManagerService = GSLocationManagerService(geofenceEventHandler: notificationService)
@@ -38,27 +38,45 @@ public final class GeoSDK: NSObject {
         registerForNotificationTaps()
     }
     
+    /// Starts geofence monitoring
+    public func startGeofenceMonitoring() {
+        interactor.startMonitoring()
+    }
+    
+    /// Stops geofence monitoring
+    func stopGeofenceMonitoring() {
+        interactor.stopMonitoring()
+    }
+    
+    /// Sets up notification handling for geofence events
     private func registerForNotificationTaps() {
         UNUserNotificationCenter.current().delegate = self
     }
 }
 
 extension GeoSDK: UNUserNotificationCenterDelegate {
+    /// Handles notification interactions
     public func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        // Stop geofencing
-        stopGeofenceMonitoring()
-        let userInfo = response.notification.request.content.userInfo
-        if let locationName = userInfo["locationName"] as? String,
-           let eventType = userInfo["eventType"] as? String {
-            if eventType == GSEventType.exit.rawValue {
-                self.delegate?.geofenceSdk(self, didExitGeofenceWithIdentifier: locationName)
-            } else if eventType == GSEventType.enter.rawValue {
-                self.delegate?.geofenceSdk(self, didEnterGeofenceWithIdentifier: locationName)
-            }
-        }
-        // Clear notifications
-        center.removeAllDeliveredNotifications()
-        
+        handleGeofenceNotification(response)
         completionHandler()
+    }
+    
+    /// Processes the geofence notification event
+    private func handleGeofenceNotification(_ response: UNNotificationResponse) {
+        let userInfo = response.notification.request.content.userInfo
+        
+        guard let locationName = userInfo["locationName"] as? String,
+              let eventType = userInfo["eventType"] as? String else {
+            return
+        }
+        
+        if eventType == GSEventType.exit.rawValue {
+            delegate?.geofenceSdk(self, didExitGeofenceWithIdentifier: locationName)
+        } else if eventType == GSEventType.enter.rawValue {
+            delegate?.geofenceSdk(self, didEnterGeofenceWithIdentifier: locationName)
+        }
+        
+        stopGeofenceMonitoring()
+        UNUserNotificationCenter.current().removeAllDeliveredNotifications()
     }
 }
