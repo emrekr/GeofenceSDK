@@ -30,7 +30,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        GeoSDK.shared.delegate = self
         view.addSubview(startGeofenceButton)
         view.addSubview(infoTextLabel)
         startGeofenceButton.translatesAutoresizingMaskIntoConstraints = false
@@ -51,7 +51,7 @@ class ViewController: UIViewController {
 
     @objc private func startGeofenceTapped(_ sender: UIButton) {
         GeoSDK.shared.startGeofenceMonitoring()
-        GeoSDK.shared.delegate = self
+        
     }
 }
 

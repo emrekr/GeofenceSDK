@@ -45,8 +45,15 @@ final class GSLocationManagerService: NSObject {
             
             locationManager.startMonitoring(for: region)
         }
+        
+        locationManager.startMonitoringVisits()
+        locationManager.startUpdatingLocation()
         locationManager.allowsBackgroundLocationUpdates = true
         locationManager.showsBackgroundLocationIndicator = true
+        locationManager.pausesLocationUpdatesAutomatically = false
+        locationManager.startMonitoringSignificantLocationChanges()
+        locationManager.distanceFilter = 0.0
+        locationManager.desiredAccuracy = 5.0
     }
     
     func stopMonitoring() {
