@@ -6,12 +6,16 @@
 //
 
 @testable import GeofenceSDK
+import CoreLocation
 
 class MockLocationManagerService: GSLocationManagerProtocol {
     var isAuthorized: Bool = true
     var didRequestAuthorizations = false
     var didConfigureGeofences = false
     var didStopMonitoring = false
+    var didStartMonitoringForRegion = false
+    var didEnterRegionCallback: ((CLRegion) -> Void)?
+    var didExitRegionCallback: ((CLRegion) -> Void)?
     
     func requestAuthorizations() async -> Bool {
         didRequestAuthorizations = true
@@ -24,5 +28,17 @@ class MockLocationManagerService: GSLocationManagerProtocol {
     
     func stopMonitoring() {
         didStopMonitoring = true
+    }
+    
+    func startMonitoringForRegion(region: CLRegion) {
+        didStartMonitoringForRegion = true
+    }
+    
+    func simulateRegionEntry(region: CLRegion) {
+        didEnterRegionCallback?(region)
+    }
+    
+    func simulateRegionExit(region: CLRegion) {
+        didExitRegionCallback?(region)
     }
 }
