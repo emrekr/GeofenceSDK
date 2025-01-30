@@ -50,8 +50,9 @@ class ViewController: UIViewController {
     }
 
     @objc private func startGeofenceTapped(_ sender: UIButton) {
-        GeoSDK.shared.startGeofenceMonitoring()
-        
+        Task {
+            await GeoSDK.shared.startGeofenceMonitoring()
+        }
     }
 }
 

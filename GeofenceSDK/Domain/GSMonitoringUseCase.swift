@@ -9,6 +9,9 @@ import Foundation
 
 /// Protocol defining the geofence monitoring use case.
 protocol GSMonitoringUseCase {
-    func startMonitoring()
+    /// Starts monitoring geofences asynchronously.
+    func startMonitoring() async
+    
+    /// Stops monitoring geofences.
     func stopMonitoring()
 }

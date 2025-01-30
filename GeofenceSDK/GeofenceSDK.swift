@@ -39,8 +39,8 @@ public final class GeoSDK: NSObject {
     }
     
     /// Starts geofence monitoring
-    public func startGeofenceMonitoring() {
-        interactor.startMonitoring()
+    public func startGeofenceMonitoring() async {
+        await interactor.startMonitoring()
     }
     
     /// Stops geofence monitoring

@@ -6,8 +6,8 @@
 //
 
 protocol GSLocationRepositoryProtocol {
-    /// Fetches predefined or retrieved location entities asynchronously.
-    func fetchLocations() async -> [GSLocationEntity]
+    /// Asynchronously fetches predefined or retrieved location entities.
+    func fetchLocations() async throws -> [GSLocationEntity]
     
     /// Returns predefined radius for region monitoring.
     func getDefaultRadius() -> Double

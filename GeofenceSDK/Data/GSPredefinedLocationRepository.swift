@@ -25,7 +25,7 @@ final class GSPredefinedLocationRepository: GSLocationRepositoryProtocol {
         return defaultRadius
     }
     
-    func fetchLocations() async -> [GSLocationEntity] {
+    func fetchLocations() async throws -> [GSLocationEntity] {
         return locations
     }
 }
