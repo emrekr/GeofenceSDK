@@ -15,17 +15,18 @@ final class GSNotificationService: GSEventHandlerProtocol {
         // Request permission right away or from some external call:
         notificationCenter.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             if let error = error {
-                print("Notification permission error: \(error.localizedDescription)")
+                DebugLogger.debugPrint("Notification permission error: \(error.localizedDescription)", from: self)
             } else {
-                print("Notification permission granted: \(granted)")
+                DebugLogger.debugPrint("Notification permission granted: \(granted)", from: self)
             }
         }
     }
     
     func handleGeofenceEvent(locationName: String, eventType: GSEventType) {
+        // Prepare notification content
         let content = UNMutableNotificationContent()
         
-        // Convert the enum to a string if needed
+        // Convert event type to a string
         let eventTypeString: String
         switch eventType {
         case .enter: eventTypeString = "Enter"
@@ -40,12 +41,22 @@ final class GSNotificationService: GSEventHandlerProtocol {
             "eventType": eventType.rawValue
         ]
         
-        let request = UNNotificationRequest(
-            identifier: "\(locationName)-\(eventTypeString)",
-            content: content,
-            trigger: UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-        )
+        // Ensure unique notification identifier
+        let notificationIdentifier = "\(locationName)-\(eventTypeString)"
         
-        notificationCenter.add(request, withCompletionHandler: nil)
+        // Create the notification trigger (fires after 1 second)
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+        
+        // Create the notification request
+        let request = UNNotificationRequest(identifier: notificationIdentifier, content: content, trigger: trigger)
+        
+        // Add the notification request to the notification center
+        notificationCenter.add(request) { error in
+            if let error = error {
+                DebugLogger.debugPrint("Failed to add notification request: \(error.localizedDescription)", from: self)
+            } else {
+                DebugLogger.debugPrint("Notification scheduled successfully: \(notificationIdentifier)", from: self)
+            }
+        }
     }
 }

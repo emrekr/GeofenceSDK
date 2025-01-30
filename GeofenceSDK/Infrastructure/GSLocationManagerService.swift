@@ -19,22 +19,30 @@ final class GSLocationManagerService: NSObject {
         locationManager.delegate = self
     }
     
-    // Request the necessary authorizations
-    func requestAuthorizations() {
-        if CLLocationManager.authorizationStatus() == .notDetermined {
+    // Request the necessary authorizations with async handling
+    func requestAuthorizations() async -> Bool {
+        switch CLLocationManager.authorizationStatus() {
+        case .notDetermined:
             locationManager.requestWhenInUseAuthorization()
-        } else if CLLocationManager.authorizationStatus() == .denied {
-            // Optionally handle the scenario if user denied location
-        } else if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
+            return false
+        case .denied, .restricted:
+            return false
+        case .authorizedWhenInUse:
             locationManager.requestAlwaysAuthorization()
+            return false
+        case .authorizedAlways:
+            return true
+        @unknown default:
+            return false
         }
     }
     
-    // Stop previous monitoring, then start new monitoring
-    func configureGeofences(locations: [GSLocationEntity], radius: Double) {
+    // Stop previous monitoring, then start new monitoring with async handling
+    func configureGeofences(locations: [GSLocationEntity], radius: Double) async {
         // Stop monitoring any existing regions
         for region in locationManager.monitoredRegions {
             locationManager.stopMonitoring(for: region)
+            DebugLogger.debugPrint("Stopped monitoring region: \(region.identifier)", from: self)
         }
         
         // Start monitoring new regions
@@ -44,6 +52,7 @@ final class GSLocationManagerService: NSObject {
             region.notifyOnExit = true
             
             locationManager.startMonitoring(for: region)
+            DebugLogger.debugPrint("Started monitoring for region: \(loc.name)", from: self)
         }
         
         locationManager.startMonitoringVisits()
@@ -54,12 +63,16 @@ final class GSLocationManagerService: NSObject {
         locationManager.startMonitoringSignificantLocationChanges()
         locationManager.distanceFilter = 0.0
         locationManager.desiredAccuracy = 5.0
+        
+        // Notify completion
+        DebugLogger.debugPrint("Geofences successfully configured.", from: self)
     }
     
+    // Stop monitoring all regions
     func stopMonitoring() {
         for region in locationManager.monitoredRegions {
             locationManager.stopMonitoring(for: region)
-            DebugLogger.debugPrint("Monitoring stoped for region: \(region)", from: self)
+            DebugLogger.debugPrint("Monitoring stopped for region: \(region.identifier)", from: self)
         }
     }
 }

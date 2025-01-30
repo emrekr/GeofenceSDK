@@ -6,8 +6,9 @@
 //
 
 protocol GSLocationRepositoryProtocol {
-    /// Returns an array of predefined or retrieved location entities.
-    func fetchLocations() -> [GSLocationEntity]
-    /// Returns predefined radius for region circle
-    func getRadius() -> Double
+    /// Asynchronously fetches predefined or retrieved location entities.
+    func fetchLocations() async throws -> [GSLocationEntity]
+    
+    /// Returns predefined radius for region monitoring.
+    func getDefaultRadius() -> Double
 }
