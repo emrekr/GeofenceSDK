@@ -8,7 +8,7 @@
 import CoreLocation
 
 /// This class handles the iOS-level details of geofence monitoring
-final class GSLocationManagerService: NSObject {
+final class GSLocationManagerService: NSObject, GSLocationManagerProtocol {
     
     private let locationManager = CLLocationManager()
     private let geofenceEventHandler: GSEventHandlerProtocol

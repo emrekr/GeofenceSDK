@@ -8,9 +8,9 @@
 final class GSMonitoringInteractor: GSMonitoringUseCase {
     
     private let locationRepo: GSLocationRepositoryProtocol
-    private let locationManagerService: GSLocationManagerService
+    private let locationManagerService: GSLocationManagerProtocol
     
-    init(locationRepo: GSLocationRepositoryProtocol, locationManagerService: GSLocationManagerService) {
+    init(locationRepo: GSLocationRepositoryProtocol, locationManagerService: GSLocationManagerProtocol) {
         self.locationRepo = locationRepo
         self.locationManagerService = locationManagerService
     }
