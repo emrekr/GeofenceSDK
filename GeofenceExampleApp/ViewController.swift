@@ -65,6 +65,4 @@ extension ViewController: GeoGeofenceSDKDelegate {
     func geofenceSdk(_ sdk: GeofenceSDK.GeoSDK, didExitGeofenceWithIdentifier identifier: String) {
         infoTextLabel.text = "You have exited \(identifier)."
     }
-    
-    
 }
