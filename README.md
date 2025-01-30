@@ -1,7 +1,7 @@
 # GeofenceSDK Documentation
 
 
-![Alt Text](https://s13.gifyu.com/images/b22Tl.gif)
+![Alt Text](assets/images/screenRecording.gif)
 ## Overview
 
 GeoSDK is a framework designed to provide geofence monitoring for iOS applications. It helps developers manage geofence regions, monitor device movement relative to predefined locations, and handle events like entering or exiting geofences. The SDK integrates with the system's location services and notifications.
